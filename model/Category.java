@@ -1,19 +1,43 @@
 package model;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Category {
-	private int idCategory;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
+@Entity(name="category")
+public class Category {
+	@Id
+	@GeneratedValue
+	private Long idCategory;
+
+	@Column(name="categoryName")
 	private String categoryName;
 	
-	public int getIdCategory() {
+	@ManyToMany(fetch = FetchType.LAZY)  
+	@JoinTable(name = "recipe_category",  
+	joinColumns = { @JoinColumn(name = "idCategory",  
+	updatable =  false) }, inverseJoinColumns = {  
+	@JoinColumn(name = "idRecipe", updatable = false) })
+	private List<Recipe> recipes = new ArrayList<Recipe>();
+
+	public Category(){
+		recipes = new ArrayList<Recipe>();
+	}
+	
+	public Long getIdCategory() {
 		return idCategory;
 	}
 
-	public void setIdCategory(int idCategory) {
+	public void setIdCategory(Long idCategory) {
 		this.idCategory = idCategory;
 	}
 
@@ -23,6 +47,14 @@ public class Category {
 
 	public void setName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+
+	public List<Recipe> getRecipes() {
+		return recipes;
+	}
+
+	public void setRecipes(List<Recipe> recipes) {
+		this.recipes = recipes;
 	}
 	
 	@Override

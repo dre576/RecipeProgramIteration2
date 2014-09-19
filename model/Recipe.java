@@ -1,18 +1,45 @@
 package model;
+
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
+@Entity(name="recipe")
 public class Recipe {
-	private int idRecipe;
+	@Id
+	@GeneratedValue
+	private Long idRecipe;
 
+	@Column(name="directions", length = 255)
 	private String directions;
-	
+
+	@Column(name="title")
 	private String title;
 	
-	private ArrayList<Category> categories = new ArrayList<Category>();
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)  
+	@JoinTable(name = "recipe_category",  
+	joinColumns = { @JoinColumn(name = "idRecipe",  
+	updatable =  false) }, inverseJoinColumns = {  
+	@JoinColumn(name = "idCategory", updatable = false) })
+	private List<Category> categories;
 	
-	private HashMap<Ingredient, String> ingredients = new HashMap<Ingredient, String>();
+	@OneToMany(mappedBy="recipe", cascade = CascadeType.ALL)	
+	private List<Ingredient> ingredients;
+	
+	public Recipe (){
+		categories = new ArrayList<Category>();
+		ingredients = new ArrayList<Ingredient>();
+	}
 	
 	@Override
 	public String toString() {
@@ -20,12 +47,12 @@ public class Recipe {
 		return getTitle();
 	}
 
-	public int getIdRecipe() {
+	public Long getIdRecipe() {
 		return idRecipe;
 	}
 
-	public void setIdRecipe(int i) {
-		this.idRecipe = i;
+	public void setIdRecipe(Long idRecipe) {
+		this.idRecipe = idRecipe;
 	}
 
 	public String getDirections() {
@@ -44,20 +71,19 @@ public class Recipe {
 		this.title = title;
 	}
 
-	public ArrayList<Category> getCategories() {
+	public List<Category> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(ArrayList<Category> categories) {
+	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
 
-	public HashMap<Ingredient, String> getIngredients() {
+	public List<Ingredient> getIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(HashMap<Ingredient, String> ingredients) {
+	public void setIngredients(List<Ingredient> ingredients) {
 		this.ingredients = ingredients;
-	}
-
+	}	
 }

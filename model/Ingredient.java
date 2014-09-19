@@ -1,16 +1,36 @@
 package model;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ingredient {
-	private int idIngredient;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+@Entity(name="ingredient")
+public class Ingredient {
+	@Id
+	@GeneratedValue
+	private Long idIngredient;
+
+	@Column(name="ingredientName")
 	private String ingredientName;
 
-	public Ingredient(){
+	@Column(name="amount")
+	private String amount;	
+	
+	@ManyToOne
+	@JoinColumn(name = "recipe")
+	private Recipe recipe;	
+	
+	public Long getIdIngredient() {
+		return idIngredient;
 	}
+
 	public String getName() {
 		return ingredientName;
 	}
@@ -24,11 +44,11 @@ public class Ingredient {
 		return getName();
 	}
 
-	public int getIdIngredient() {
-		return idIngredient;
+	public String getAmount() {
+		return amount;
 	}
 
-	public void setIdIngredient(int idIngredient) {
-		this.idIngredient = idIngredient;
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
 }
