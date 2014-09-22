@@ -22,32 +22,37 @@ public class unitTests {
 		Category cat = new Category();
 		ArrayList<Category> c = new ArrayList<Category>();
 		Ingredient ing = new Ingredient();
+		ArrayList<Ingredient> i = new ArrayList<Ingredient>();
 		
 		Recipe recipe1 = new Recipe();
 		cat.setName("Italian");
 		c.add(cat);
 		ing.setName("cheese");
+		i.add(ing);
 		recipe1.setDirections("put stuff on crust, cook it");
 		recipe1.setTitle("Pepperoni Pizza");
 		recipe1.setCategories(c);
-		recipe1.getIngredients().put(ing, "5");
+		recipe1.setIngredients(i);
 		
 		recipeList.add(recipe1);
-		resultList.add(recipe1);
+		
 		
 		Recipe recipe2 = new Recipe();
 		Category cat2 = new Category();
 		Ingredient ing2 = new Ingredient();
 		cat2.setName("Snack");
 		ArrayList<Category> c2 = new ArrayList<Category>();
-		c2.add(cat);
+		ArrayList<Ingredient> i2 = new ArrayList<Ingredient>();
+		c2.add(cat2);
 		ing2.setName("corn");
+		i2.add(ing2);
 		recipe2.setDirections("heat it up, and pop it");
 		recipe2.setTitle("Pop corn");
 		recipe2.setCategories(c2);
-		recipe2.getIngredients().put(ing2, "2");
+		recipe2.setIngredients(i2);
 		
 		recipeList.add(recipe2);
+		resultList.add(recipe1);
 	    
 	    assertEquals(resultList, searchSort.searchByName("Pepperoni", recipeList));
 	}
@@ -62,15 +67,18 @@ public class unitTests {
 		Category cat = new Category();
 		ArrayList<Category> c = new ArrayList<Category>();
 		Ingredient ing = new Ingredient();
+ArrayList<Ingredient> i = new ArrayList<Ingredient>();
 		
 		Recipe recipe1 = new Recipe();
 		cat.setName("Italian");
 		c.add(cat);
 		ing.setName("cheese");
+		i.add(ing);
 		recipe1.setDirections("put stuff on crust, cook it");
 		recipe1.setTitle("Pepperoni Pizza");
 		recipe1.setCategories(c);
-		recipe1.getIngredients().put(ing, "5");
+		recipe1.setIngredients(i);
+		
 		recipeList.add(recipe1);
 		
 		Recipe recipe2 = new Recipe();
@@ -78,12 +86,14 @@ public class unitTests {
 		Ingredient ing2 = new Ingredient();
 		cat2.setName("Snack");
 		ArrayList<Category> c2 = new ArrayList<Category>();
+		ArrayList<Ingredient> i2 = new ArrayList<Ingredient>();
 		c2.add(cat2);
 		ing2.setName("corn");
+		i2.add(ing2);
 		recipe2.setDirections("heat it up, and pop it");
 		recipe2.setTitle("Pop corn");
 		recipe2.setCategories(c2);
-		recipe2.getIngredients().put(ing2, "2");
+		recipe2.setIngredients(i2);
 		
 		recipeList.add(recipe2);
 		resultList.add(recipe2);
@@ -101,28 +111,34 @@ public class unitTests {
 		Category cat = new Category();
 		ArrayList<Category> c = new ArrayList<Category>();
 		Ingredient ing = new Ingredient();
+ArrayList<Ingredient> i = new ArrayList<Ingredient>();
 		
 		Recipe recipe1 = new Recipe();
 		cat.setName("Italian");
 		c.add(cat);
 		ing.setName("cheese");
+		i.add(ing);
 		recipe1.setDirections("put stuff on crust, cook it");
 		recipe1.setTitle("Pepperoni Pizza");
 		recipe1.setCategories(c);
-		recipe1.getIngredients().put(ing, "5");
+		recipe1.setIngredients(i);
+		
 		recipeList.add(recipe1);
+		
 		
 		Recipe recipe2 = new Recipe();
 		Category cat2 = new Category();
 		Ingredient ing2 = new Ingredient();
 		cat2.setName("Snack");
 		ArrayList<Category> c2 = new ArrayList<Category>();
+		ArrayList<Ingredient> i2 = new ArrayList<Ingredient>();
 		c2.add(cat2);
 		ing2.setName("corn");
+		i2.add(ing2);
 		recipe2.setDirections("heat it up, and pop it");
 		recipe2.setTitle("Pop corn");
 		recipe2.setCategories(c2);
-		recipe2.getIngredients().put(ing2, "2");
+		recipe2.setIngredients(i2);
 		
 		recipeList.add(recipe2);
 		resultList.add(recipe1);

@@ -1,3 +1,8 @@
+package controller;
+
+import model.Category;
+import model.Ingredient;
+import model.Recipe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,13 +11,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class searchSort {
+	//NEED to check which recipe importing
 	
 	public static ArrayList<Recipe> searchByName(String searchedString,
 			ArrayList<Recipe> recipeArray) {
 
 		ArrayList<Recipe> foundRecipesArray = new ArrayList<Recipe>();
 		for (Recipe recipe : recipeArray) {
-			if (recipe.getName().toLowerCase()
+			if (recipe.getTitle().toLowerCase()
 					.contains(searchedString.toLowerCase())) {
 				foundRecipesArray.add(recipe);
 			}
@@ -27,9 +33,8 @@ public class searchSort {
 
 		ArrayList<Recipe> foundRecipesArray = new ArrayList<Recipe>();
 		for (Recipe recipe : recipeArray) {
-			for (String ingredient : recipe.getIngredients()) {
-				if (ingredient.toLowerCase().contains(
-						searchedString.toLowerCase())) {
+			for (Ingredient ingredient : recipe.getIngredients()) {
+				if (ingredient.getName().toLowerCase().contains(searchedString.toLowerCase())) {
 					foundRecipesArray.add(recipe);
 					break;
 				}
@@ -45,9 +50,8 @@ public class searchSort {
 
 		ArrayList<Recipe> foundRecipesArray = new ArrayList<Recipe>();
 		for (Recipe recipe : recipeArray) {
-			for (String category : recipe.getCategories()) {
-				if (category.toLowerCase().contains(
-						searchedString.toLowerCase())) {
+			for (Category category : recipe.getCategories()) {
+				if (category.getName().toLowerCase().contains(searchedString.toLowerCase())) {
 					foundRecipesArray.add(recipe);
 					break;
 				}
@@ -61,8 +65,8 @@ public class searchSort {
 	public static Set<String> findCategories(ArrayList<Recipe> recipeArray) {
 		Set<String> categorySet = new HashSet<String>();
         for (Recipe r : recipeArray) {
-            for (String i : r.getCategories()) {
-                categorySet.add(i.toLowerCase());
+            for (Category i : r.getCategories()) {
+                categorySet.add(i.getName().toLowerCase());
             }
         }
 		return categorySet;
@@ -79,8 +83,8 @@ public class searchSort {
 		Collections.sort(alphabeticalList, new Comparator<Recipe>() {
 			@Override
 			public int compare(Recipe o1, Recipe o2) {
-				return o1.getName().toLowerCase()
-						.compareTo(o2.getName().toLowerCase());
+				return o1.getTitle().toLowerCase()
+						.compareTo(o2.getTitle().toLowerCase());
 			}
 		});
 
