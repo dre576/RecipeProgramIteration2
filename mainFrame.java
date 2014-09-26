@@ -1,4 +1,3 @@
-package Iota;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -16,6 +15,7 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -27,16 +27,27 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+
+import controller.searchSort;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+
+import model.Recipe;
 
 public class mainFrame extends JFrame
 {
 	private JTextField tagsField;
 	private JTable recipeTable;
 	private JTextField searchBar;
+	JComboBox categoryDropdown;
+	String current = "";
+	ArrayList<String> categoryList = new ArrayList<String>();
+	ArrayList<Recipe> recipeArray = new ArrayList<Recipe>();
+	//How do I bring in the recipes from the database? - Andrea
 
 	/**
 	 * Launch the application.
@@ -93,12 +104,20 @@ public class mainFrame extends JFrame
 		panel.add(tagsField);
 		tagsField.setColumns(10);
 		
-		JComboBox categoryDropdown = new JComboBox();
+		//added stuff here so we can fill out the category list - Andrea
+		categoryList.add("Choose a category");  
+		categoryList.addAll(searchSort.findCategories(recipeArray));  
+		categoryDropdown = new JComboBox();
+		for (int i=0;i<categoryList.size();i++)
+		{
+			categoryDropdown.addItem(categoryList.get(i));
+		}
 		categoryDropdown.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 			}
 		});
+		categoryDropdown.addActionListener(new ComboListener());
 		categoryDropdown.setBounds(69, 73, 171, 20);
 		panel.add(categoryDropdown);
 		
@@ -162,5 +181,21 @@ public class mainFrame extends JFrame
 		searchBar.setBounds(330, 513, 504, 20);
 		panel.add(searchBar);
 		searchBar.setColumns(10);
+	}
+	//also added this so we can break the code apart a bit and make it easier to read and understand -Andrea
+	private class ComboListener implements ActionListener
+	{
+
+		public void actionPerformed(ActionEvent event) {
+			if (!current.equals(""))
+			{
+				//need to call sort by recipe so it can display properly
+				//the alphabetical recipes again
+			}
+			current = categoryList.get((categoryDropdown.getSelectedIndex()));
+			//need to call search by category once category is chosen
+			//to display recipes titles with selected category
+		}
+		
 	}
 }
