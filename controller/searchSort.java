@@ -62,8 +62,8 @@ public class searchSort {
 
 	}
 
-	public static Set<String> findCategories(ArrayList<Recipe> recipeArray) {
-		Set<String> categorySet = new HashSet<String>();
+	public static ArrayList<String> findCategories(ArrayList<Recipe> recipeArray) {
+		ArrayList<String> categorySet = new ArrayList<String>();
         for (Recipe r : recipeArray) {
             for (Category i : r.getCategories()) {
                 categorySet.add(i.getName().toLowerCase());
