@@ -3,13 +3,14 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity(name="ingredient")
 public class Ingredient {
@@ -19,13 +20,10 @@ public class Ingredient {
 
 	@Column(name="ingredientName")
 	private String ingredientName;
-
-	@Column(name="amount")
-	private String amount;	
 	
-	@ManyToOne
-	@JoinColumn(name = "recipe")
-	private Recipe recipe;	
+	@OneToMany(mappedBy = "ingredient")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<RecipeManager> ingredientsOfRecipe = new ArrayList<RecipeManager>();	
 	
 	public Long getIdIngredient() {
 		return idIngredient;
@@ -44,11 +42,11 @@ public class Ingredient {
 		return getName();
 	}
 
-	public String getAmount() {
-		return amount;
+	public List<RecipeManager> getIngredientsOfRecipe() {
+		return ingredientsOfRecipe;
 	}
 
-	public void setAmount(String amount) {
-		this.amount = amount;
+	public void setIngredientsOfRecipe(List<RecipeManager> ingredientsOfRecipe) {
+		this.ingredientsOfRecipe = ingredientsOfRecipe;
 	}
 }

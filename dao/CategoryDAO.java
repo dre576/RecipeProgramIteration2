@@ -6,19 +6,19 @@ import model.Category;
 import model.database.GenericDAO;
 
 public class CategoryDAO extends GenericDAO {
-	public void createCategory(Category category){
+	public static void createCategory(Category category){
 	     create(category);
 	}
 	
-	public void updateCategory(Category category){
+	public static void updateCategory(Category category){
 	     update(category);
 	}
 	
-	public void removeCategory(Category category){
+	public static void removeCategory(Category category){
 	     remove(category);
 	}
 	
-	public  List<Category> findAll(){
+	public static List<Category> findAll(){
 		List<Category> list = findAll("category");
 	    return list;
 	}

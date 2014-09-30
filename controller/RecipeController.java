@@ -1,86 +1,46 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.swing.JOptionPane;
 
 import model.Category;
 import model.Ingredient;
 import model.Recipe;
+import model.dao.CategoryDAO;
+import model.dao.IngredientDAO;
 import model.dao.RecipeDAO;
+import model.util.searchSort;
 
 public class RecipeController {
+	public static void saveRecipe(Recipe recipe) {
+		try {
+			if (recipe.getIdRecipe() == null) {
+				RecipeDAO.createRecipe(recipe);
+			} else {
+				RecipeDAO.updateRecipe(recipe);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-	
-	public void addRecipe(String title, String directions, ArrayList<Category> categories, HashMap<Ingredient, String> ingredients ){
-		
-		//create recipe object.
-		Recipe recipe = new Recipe();
-		recipe.setTitle(title);
-		recipe.setDirections(directions);
-		recipe.setCategories(categories);
-		recipe.setIngredients(ingredients);
-		
-		try{
-		//add to RecipeDAO
-		RecipeDAO access = new RecipeDAO();
-		access.createRecipe(recipe);
-		
+	public static ArrayList<Recipe> getRecipes() {
+		ArrayList<Recipe> recipes = (ArrayList<Recipe>) RecipeDAO.findAll();
+		recipes = searchSort.sortRecipeAlphabetical(recipes);
+		return recipes;		
+	}
+
+	public static void removeRecipe(Recipe recipe) {
+		RecipeDAO.removeRecipe(recipe);
+		for (Ingredient ingredient : IngredientDAO.findAll()) {
+			if(ingredient.getIngredientsOfRecipe().isEmpty()){
+				IngredientDAO.removeIngredient(ingredient);
+			}
 		}
 		
-		catch (Exception exception)
-		{
-			//throw general exception.
-			JOptionPane.showMessageDialog(null, "Error adding recipe to database.");
-			
+		for (Category category : CategoryDAO.findAll()) {
+			if(category.getRecipes().isEmpty()){
+				CategoryDAO.removeCategory(category);
+			}
 		}
-		
 	}
-	//retrieves recipe from database for manipulation.
-	//public Recipe getRecipe(String ID){
-		
-		
-	//	return Recipe;
-		
-//	}
-	
-	//insert edits into parameter
-	public void editRecipe(String title, String directions, ArrayList<Category> categories, HashMap<Ingredient, String> ingredients ){
-		//use editID to retrieve from db
-		RecipeDAO access = new RecipeDAO();
-		//create recipe object.
-				Recipe recipe = new Recipe();
-				recipe.setTitle(title);
-				recipe.setDirections(directions);
-				recipe.setCategories(categories);
-				recipe.setIngredients(ingredients);
-				
-		access.updateRecipe(recipe);
-		
-	}
-	
-	//delete recipe through I
-	public void deleteRecipe(){
-		
-	}
-	
-	//add amount
-	public void addIngredient(String Name){
-		
-	}
-	
-	public void addTag(String Tag)
-	{
-		
-	}
-	
-	public void addDirections(String Directions)
-	{
-		
-	}
-	
-
-	
-	
 }

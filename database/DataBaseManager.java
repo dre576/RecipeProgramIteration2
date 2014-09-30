@@ -2,26 +2,34 @@ package model.database;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.swing.JOptionPane;
 
 import model.Category;
 import model.Ingredient;
 import model.Recipe;
+import model.RecipeManager;
 
 public class DataBaseManager {
 	private static EntityManagerFactory emf = null;
-	private static EntityManager em = null;
 	
 	
 	private final Class<?>[] CLASSES = new Class<?>[]{
 			Recipe.class,
 			Category.class,
-			Ingredient.class
+			Ingredient.class,
+			RecipeManager.class
 			};
 
 	
 	private DataBaseManager(){
-		emf = DynamicPersistenceUnits.createEMF(CLASSES, "localhost", "3306" , "recipe", "root", "root");
-		em = emf.createEntityManager();
+		try{
+			emf = DynamicPersistenceUnits.createEMF(CLASSES, "localhost", "3306" , "recipe", "root", "root");
+			}
+		
+		catch(Exception exception)
+		{
+			JOptionPane.showMessageDialog(null, "Error connecting to database.", "Database error.", JOptionPane.ERROR_MESSAGE);
+		}
 		}
 	
 	synchronized static EntityManagerFactory getManagerFactory() {
@@ -31,17 +39,6 @@ public class DataBaseManager {
 	}
 	
 	public static EntityManager getDataBaseSession(){
-		if(em==null)
-			em = getManagerFactory().createEntityManager();
-		return em;
+		return getManagerFactory().createEntityManager();
 	}
-
-	public static EntityManager getEm() {
-		return em;
-	}
-
-	public static void setEm(EntityManager em) {
-		DataBaseManager.em = em;
-	}
-
 }

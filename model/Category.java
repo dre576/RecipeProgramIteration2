@@ -13,6 +13,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 @Entity(name="category")
 public class Category {
 	@Id
@@ -22,7 +25,8 @@ public class Category {
 	@Column(name="categoryName")
 	private String categoryName;
 	
-	@ManyToMany(fetch = FetchType.LAZY)  
+	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "recipe_category",  
 	joinColumns = { @JoinColumn(name = "idCategory",  
 	updatable =  false) }, inverseJoinColumns = {  
