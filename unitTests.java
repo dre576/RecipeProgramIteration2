@@ -1,8 +1,11 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.Recipe;
 import model.Category;
 import model.Ingredient;
+import model.RecipeManager;
+import controller.RecipeManagerController;
 import controller.searchSort;
 
 import org.junit.Assert;
@@ -114,17 +117,20 @@ ArrayList<Ingredient> i = new ArrayList<Ingredient>();
 		Category cat = new Category();
 		ArrayList<Category> c = new ArrayList<Category>();
 		Ingredient ing = new Ingredient();
-ArrayList<Ingredient> i = new ArrayList<Ingredient>();
+		ArrayList<RecipeManager> rm = new ArrayList<RecipeManager>();
+		RecipeManager recipemngr = new RecipeManager();
 		
 		Recipe recipe1 = new Recipe();
 		cat.setName("Italian");
 		c.add(cat);
 		ing.setName("cheese");
-		i.add(ing);
+		
 		recipe1.setDirections("put stuff on crust, cook it");
 		recipe1.setTitle("Pepperoni Pizza");
 		recipe1.setCategories(c);
-		//recipe1.setIngredients(i);
+		recipemngr.setIngredient(ing);
+		rm.add(recipemngr);
+		recipe1.setIngredientsOfRecipe(rm);
 		
 		recipeList.add(recipe1);
 		
@@ -134,14 +140,19 @@ ArrayList<Ingredient> i = new ArrayList<Ingredient>();
 		Ingredient ing2 = new Ingredient();
 		cat2.setName("Snack");
 		ArrayList<Category> c2 = new ArrayList<Category>();
-		ArrayList<Ingredient> i2 = new ArrayList<Ingredient>();
+		
 		c2.add(cat2);
+		ArrayList<RecipeManager> rm2 = new ArrayList<RecipeManager>();
+		RecipeManager recipemngr2 = new RecipeManager();
 		ing2.setName("corn");
-		i2.add(ing2);
+		
 		recipe2.setDirections("heat it up, and pop it");
 		recipe2.setTitle("Pop corn");
 		recipe2.setCategories(c2);
-		//recipe2.setIngredients(i2);
+		recipemngr2.setIngredient(ing2);
+		rm2.add(recipemngr2);
+		recipe2.setIngredientsOfRecipe(rm2);
+		
 		
 		recipeList.add(recipe2);
 		resultList.add(recipe1);
@@ -182,6 +193,7 @@ ArrayList<Ingredient> i = new ArrayList<Ingredient>();
 				ArrayList<Ingredient> i2 = new ArrayList<Ingredient>();
 				c2.add(cat2);
 				ing2.setName("corn");
+				
 				i2.add(ing2);
 				recipe2.setDirections("heat it up, and pop it");
 				recipe2.setTitle("Pop corn");
