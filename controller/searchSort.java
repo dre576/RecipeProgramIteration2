@@ -3,6 +3,7 @@ package controller;
 import model.Category;
 import model.Ingredient;
 import model.Recipe;
+import model.RecipeManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,8 +34,8 @@ public class searchSort {
 
 		ArrayList<Recipe> foundRecipesArray = new ArrayList<Recipe>();
 		for (Recipe recipe : recipeArray) {
-			for (Ingredient ingredient : recipe.getIngredients()) {
-				if (ingredient.getName().toLowerCase().contains(searchedString.toLowerCase())) {
+			for (RecipeManager ingredient : recipe.getIngredientsOfRecipe()) {
+				if (ingredient.getIngredient().getName().toLowerCase().contains(searchedString.toLowerCase())) {
 					foundRecipesArray.add(recipe);
 					break;
 				}
