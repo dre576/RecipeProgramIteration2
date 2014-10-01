@@ -48,6 +48,7 @@ import model.util.MyTableModel;
 import controller.RecipeController;
 
 import java.awt.Toolkit;
+import model.util.searchSort;
 
 public class mainFrame extends JFrame {
 	private JTable table;
@@ -306,6 +307,11 @@ public class mainFrame extends JFrame {
 		panel_4.add(lblNewLabel, gbc_lblNewLabel);
 
 		textField = new JTextField();
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				search();
+			}
+		});
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		textField.setBorder(null);
 		GridBagConstraints gbc_textField = new GridBagConstraints();
@@ -398,5 +404,36 @@ public class mainFrame extends JFrame {
 			}
 		} }
 		repaint();
+	}
+	
+	protected void search(){
+		//if user wants to get back to the rest of the recipes just select all in combo box
+		
+		ArrayList<Recipe> recipes = RecipeController.getRecipes();
+		ArrayList<Recipe> allFoundRecipes;
+		String textEntered = textField.getText();
+		if (textEntered.equals("") ||textEntered.equals(" "))
+		{
+			fillTable();
+		}
+		else{
+		allFoundRecipes = searchSort.searchByName(textEntered,recipes);
+		allFoundRecipes.addAll(searchSort.searchByCategory(textEntered, recipes));
+		allFoundRecipes.addAll(searchSort.searchByIngredient(textEntered, recipes));
+		tableModel.setRowCount(0);
+		if(comboBox.getSelectedItem() != null){
+			if (comboBox.getSelectedItem().equals("All")) {
+				for (Recipe recipe : allFoundRecipes) {
+					tableModel.addRow(new Object[] { recipe });
+				}
+			} else {
+				Category category = (Category)comboBox.getSelectedItem();
+				for (Recipe recipe : category.getRecipes()) {
+					tableModel.addRow(new Object[] { recipe });
+				}
+			} }
+			repaint();
+		}
+		
 	}
 }
