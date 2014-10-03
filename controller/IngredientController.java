@@ -20,7 +20,7 @@ public class IngredientController {
 	public static Ingredient getIngredient(String name) {
 		Ingredient ingredient = null;
 		for (Ingredient i : IngredientDAO.findAll()) {
-			if(i.getName().toUpperCase().equals(name.toUpperCase())){
+			if(i.getName().compareTo(name.toUpperCase()) == 0){
 				ingredient = i;
 			}
 		};

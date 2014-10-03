@@ -20,11 +20,13 @@ public class CategoryController {
 
 	public static Category getCategory(String nameCategory) {
 		Category category = null;
+		
 		for (Category c : CategoryDAO.findAll()) {
-			if(c.getName().toUpperCase().equals(nameCategory.toUpperCase())){
+			if(c.getName().compareTo(nameCategory.toUpperCase()) == 0){
 				category = c;
+				break;
 			}
-		};
+		}
 		
 		if (category == null){
 			category = new Category();

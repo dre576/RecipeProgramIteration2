@@ -1,7 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,11 +16,11 @@ public class RecipeManager {
 	@GeneratedValue
 	private Long id;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name = "recipe")
 	private Recipe recipe;
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name = "ingredient")
 	private Ingredient ingredient;
 
@@ -67,6 +66,6 @@ public class RecipeManager {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return getIngredient() + " " + getAmount();
+		return getIngredient().getName();
 	}
 }

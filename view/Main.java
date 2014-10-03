@@ -11,6 +11,9 @@ import controller.RecipeManagerController;
 
 public class Main {
 	public static void main(String[] args) {
+		/*This is the "script" and to create the information for the database,
+		 * just run this method once.
+		 */
 		script();
 	}
 

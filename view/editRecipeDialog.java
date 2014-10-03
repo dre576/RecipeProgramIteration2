@@ -28,10 +28,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import model.Category;
+import model.Ingredient;
 import model.Recipe;
 import model.RecipeManager;
+import model.dao.RecipeManagerDAO;
 import model.util.IconManager;
 import model.util.MyTableModel;
+import controller.CategoryController;
+import controller.IngredientController;
+import controller.RecipeController;
 import controller.RecipeManagerController;
 
 public class editRecipeDialog extends JDialog {
@@ -48,8 +53,8 @@ public class editRecipeDialog extends JDialog {
 	
 	
 	Recipe recipe;
-	HashMap<String, String> ingredients = new HashMap<String, String>();
-	ArrayList<String> categories = new ArrayList<String>();
+	ArrayList<Category> categories = new ArrayList<Category>();
+	ArrayList<RecipeManager> ingredients = new ArrayList<RecipeManager>();
 	private JTextArea textAreaDescription;
 
 	
@@ -157,7 +162,7 @@ public class editRecipeDialog extends JDialog {
 					columns.add("Amount");
 					columns.add("Edit");
 					columns.add("Remove");
-					tableModelIngredient = MyTableModel.modelIngredient(
+					tableModelIngredient = MyTableModel.modelIngredientEdit(
 							columns, null);
 
 					tableIngredient = new JTable(tableModelIngredient);
@@ -245,7 +250,7 @@ public class editRecipeDialog extends JDialog {
 					columns.add("Category");
 					columns.add("Edit");
 					columns.add("Remove");
-					tableModelCategory = MyTableModel.modelCategory(columns,
+					tableModelCategory = MyTableModel.modelCategoryEdit(columns,
 							null);
 					tableCategory = new JTable(tableModelCategory);
 					tableCategory.addMouseListener(new MouseAdapter() {
@@ -333,10 +338,6 @@ public class editRecipeDialog extends JDialog {
 	}
 
 	private void fillFields() {
-		for (Category category : recipe.getCategories()) {
-			categories.add(category.getName());
-		}
-		ingredients = recipe.getIngredients();
 		textAreaDescription.setText(recipe.getDirections());
 		textFieldTitle.setText(recipe.getTitle());
 	}
@@ -344,7 +345,9 @@ public class editRecipeDialog extends JDialog {
 	protected void saveRecipe() {
 		String title = textFieldTitle.getText();
 		String directions = textAreaDescription.getText();
-		RecipeManagerController.editRecipe(directions, title, ingredients, categories, recipe);
+		recipe.setTitle(title);
+		recipe.setDirections(directions);
+		RecipeController.saveRecipe(recipe);
 		setVisible(false);
 	}
 
@@ -352,16 +355,16 @@ public class editRecipeDialog extends JDialog {
 		if (e.getClickCount() == 2) {
 			/*remove*/
 			if(tableCategory.getSelectedColumn() == 2){
-				String category = (String) tableCategory.getValueAt(tableCategory.getSelectedRow(), 0);
-				categories.remove(category);
+				Category category = (Category) tableCategory.getValueAt(tableCategory.getSelectedRow(), 0);
+				recipe.getCategories().remove(category);
 			} /*edit*/ else if (tableCategory.getSelectedColumn() == 1){
-				String category = (String) tableCategory.getValueAt(tableCategory.getSelectedRow(), 0);
-				saveCategoryDialog dialog = new saveCategoryDialog(category);
+				Category category = (Category) tableCategory.getValueAt(tableCategory.getSelectedRow(), 0);
+				saveCategoryDialog dialog = new saveCategoryDialog(category.getName());
 				dialog.setVisible(true);
 				
 				String newCategory = dialog.getCategory();
-				categories.remove(category);
-				categories.add(newCategory);
+				category.setName(newCategory);
+				CategoryController.saveCategory(category);
 			}
 		}
 		
@@ -373,19 +376,26 @@ public class editRecipeDialog extends JDialog {
 		if (arg0.getClickCount() == 2) {
 			/*remove*/
 			if(tableIngredient.getSelectedColumn() == 3){
-				String key = (String) tableIngredient.getValueAt(tableIngredient.getSelectedRow(), 0);
-				ingredients.remove(key);
+				RecipeManager key = (RecipeManager) tableIngredient.getValueAt(tableIngredient.getSelectedRow(), 0);
+				recipe.getIngredientsOfRecipe().remove(key);
+				RecipeController.saveRecipe(recipe);
+				RecipeManagerDAO.removeIngredientsOfRecipe(key);			
 			} /*edit*/ else if (tableIngredient.getSelectedColumn() == 2){
-				String ingredient = (String) tableIngredient.getValueAt(tableIngredient.getSelectedRow(), 0);
+				RecipeManager mngr = (RecipeManager) tableIngredient.getValueAt(tableIngredient.getSelectedRow(), 0);
 				String amount = (String) tableIngredient.getValueAt(tableIngredient.getSelectedRow(), 1);
-				saveIngredientDialog dialog = new saveIngredientDialog(amount, ingredient);
-				dialog.setVisible(true);
+				saveIngredientDialog dialog = new saveIngredientDialog(amount, mngr.getIngredient().getName());
+				dialog.setVisible(true);				
 				
-				String newIngredient = dialog.getIngredient();
-				String newAmount = dialog.getAmount();
+				Ingredient ingredient = IngredientController.getIngredient(mngr.getIngredient().getName()); 
+				ingredient.setName(dialog.getIngredient());
+				IngredientController.saveIngredient(ingredient);
 				
-				ingredients.remove(ingredient);
-				ingredients.put(newIngredient, newAmount);
+				mngr.setIngredient(ingredient);
+				mngr.setAmount(dialog.getAmount());
+				mngr.setRecipe(recipe);
+				
+				RecipeManagerController.saveManager(mngr);
+
 			}
 		}
 		fillTable();
@@ -394,9 +404,8 @@ public class editRecipeDialog extends JDialog {
 	protected void addCategory() {
 		saveCategoryDialog dialog = new saveCategoryDialog("");
 		dialog.setVisible(true);
-		
-		String newCategory = dialog.getCategory();
-		categories.add(newCategory);
+		Category category = CategoryController.getCategory(dialog.getCategory());
+		recipe.getCategories().add(category);
 		fillTable();
 	}
 
@@ -404,20 +413,14 @@ public class editRecipeDialog extends JDialog {
 		tableModelCategory.setRowCount(0);
 		tableModelIngredient.setRowCount(0);
 
-		for (String s : categories) {
-			tableModelCategory.addRow(new Object[] { s, IconManager.getEdit(),
+		for (Category category : recipe.getCategories()) {
+			tableModelCategory.addRow(new Object[] { category, IconManager.getEdit(),
 					IconManager.getRemove() });
 		}
 
-		Iterator it = ingredients.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry) it.next();
-			String nameIngredient = (String) pairs.getKey();
-			String amountIngredient = (String) pairs.getValue();
-			tableModelIngredient.addRow(new Object[] { nameIngredient,
-					amountIngredient, IconManager.getEdit(),
+		for (RecipeManager mngr : recipe.getIngredientsOfRecipe()) {
+			tableModelIngredient.addRow(new Object[] { mngr, mngr.getAmount(), IconManager.getEdit(),
 					IconManager.getRemove() });
-			// it.remove();
 		}
 	}
 
@@ -427,7 +430,14 @@ public class editRecipeDialog extends JDialog {
 		
 		String newIngredient = dialog.getIngredient();
 		String newAmount = dialog.getAmount();
-		ingredients.put(newIngredient, newAmount);
+		
+		Ingredient ingredient = IngredientController.getIngredient(newIngredient);
+		RecipeManager mngr = new RecipeManager();
+		mngr.setAmount(newAmount);
+		mngr.setIngredient(ingredient);
+		mngr.setRecipe(recipe);
+		RecipeManagerController.saveManager(mngr);
+		recipe.getIngredientsOfRecipe().add(mngr);
 		fillTable();
 	}
 
