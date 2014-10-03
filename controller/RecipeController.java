@@ -15,21 +15,11 @@ public class RecipeController {
 		try {
 			if (recipe.getIdRecipe() == null) {
 				RecipeDAO.createRecipe(recipe);
-				updateCategory();
 			} else {
 				RecipeDAO.updateRecipe(recipe);
-				updateCategory();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	private static void updateCategory() {
-		for (Category category : CategoryDAO.findAll()) {
-			if(category.getRecipes().isEmpty()){
-				CategoryDAO.removeCategory(category);
-			}
 		}
 	}
 
