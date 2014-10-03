@@ -45,7 +45,9 @@ import model.Recipe;
 import model.dao.CategoryDAO;
 import model.dao.RecipeDAO;
 import model.util.MyTableModel;
+import model.util.searchSort;
 import controller.RecipeController;
+
 import java.awt.Toolkit;
 
 public class mainFrame extends JFrame {
@@ -304,6 +306,11 @@ public class mainFrame extends JFrame {
 		panelSearch.add(labelSearch, gbc_labelSearch);
 
 		textFieldSearch = new JTextField();
+		textFieldSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				search();
+			}
+		});
 		textFieldSearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		textFieldSearch.setBorder(null);
 		GridBagConstraints gbc_textFieldSearch = new GridBagConstraints();
@@ -376,5 +383,35 @@ public class mainFrame extends JFrame {
 			}
 		} }
 		repaint();
+	}
+	protected void search(){
+		//if user wants to get back to the rest of the recipes just select all in combo box
+		
+		ArrayList<Recipe> recipes = RecipeController.getRecipes();
+		ArrayList<Recipe> allFoundRecipes;
+		String textEntered = textFieldSearch.getText();
+		if (textEntered.equals("") ||textEntered.equals(" "))
+		{
+			fillTable();
+		}
+		else{
+		allFoundRecipes = searchSort.searchByName(textEntered,recipes);
+		allFoundRecipes.addAll(searchSort.searchByCategory(textEntered, recipes));
+		allFoundRecipes.addAll(searchSort.searchByIngredient(textEntered, recipes));
+		tableModel.setRowCount(0);
+		if(comboBoxCategory.getSelectedItem() != null){
+			if (comboBoxCategory.getSelectedItem().equals("All")) {
+				for (Recipe recipe : allFoundRecipes) {
+					tableModel.addRow(new Object[] { recipe });
+				}
+			} else {
+				Category category = (Category)comboBoxCategory.getSelectedItem();
+				for (Recipe recipe : category.getRecipes()) {
+					tableModel.addRow(new Object[] { recipe });
+				}
+			} }
+			repaint();
+		}
+		
 	}
 }
